@@ -22,6 +22,32 @@ public class JDProcessableImpl implements Processable{
 		HtmlCleaner htmlClear = new HtmlCleaner();
 		TagNode rootNode = htmlClear.clean(content);
 		try {
+		String url = page.getUrl();
+			if(url.startsWith("http://list.jd.com/")){
+				//解析下一页
+				String nextUrl = HtmlUtils.getAttributeByName(rootNode, "//*[@id=\"J_topPage\"]/a[2]", "href");
+				if(!nextUrl.equals("javascript:;")){//若不是最后一页才往下执行
+					nextUrl = "http://list.jd.com"+nextUrl.replace("&amp;","&");
+					page.addUrl(nextUrl);
+				}
+				//解析当前页
+				Object[] evaluateXPath = rootNode.evaluateXPath("//*[@id=\"plist\"]/ul/li/div/div[1]/a");
+				for(Object obj : evaluateXPath){
+					TagNode tagNode = (TagNode) obj;
+					page.addUrl(tagNode.getAttributeByName("href"));
+				}
+			}else{
+				processProduct(page,rootNode);
+			}
+		} catch (XPatherException e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * 解析商品
+	 */
+	public void processProduct(Page page,TagNode rootNode){
+		try {
 			//解析标题，用XPATH
 			String title = HtmlUtils.getText(rootNode, "//*[@id=\"name\"]/h1");
 			page.addField("title", title);

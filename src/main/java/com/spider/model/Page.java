@@ -1,6 +1,8 @@
 package com.spider.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Page {
@@ -12,6 +14,9 @@ public class Page {
 	private String content;
 	//商品的规格参数
 	private Map<String,String> map = new HashMap<String, String>();
+	//存储当前页的商品URL和下一页的URL
+	private List<String> urlList = new ArrayList<String>();
+	
 	public String getGoodsId() {
 		return goodsId;
 	}
@@ -33,10 +38,16 @@ public class Page {
 	public Map<String, String> getMap() {
 		return map;
 	}
-	public void setMap(Map<String, String> map) {
-		this.map = map;
-	}
+	//不用set方法
 	public void addField(String key,String value){
 		this.map.put(key, value);
 	}
+	public List<String> getUrlList() {
+		return urlList;
+	}
+	//不用set方法
+	public void addUrl(String url){
+		this.urlList.add(url);
+	}
+
 }
