@@ -11,8 +11,11 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PageUtils {
+	private static Logger logger = LoggerFactory.getLogger(PageUtils.class);
 	/**url获取页面的内容
 	 * 根据
 	 * @param url
@@ -24,15 +27,13 @@ public class PageUtils {
 		CloseableHttpClient client = builder.build();
 		HttpUriRequest request = new HttpGet(url);
 		try {
+			long start_time = System.currentTimeMillis();
 			CloseableHttpResponse response = client.execute(request);
 			HttpEntity entity = response.getEntity();
 			content = EntityUtils.toString(entity);
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.info("页面下载成功：{},耗时：{}",url,System.currentTimeMillis()-start_time);
+		} catch (Exception e) {
+			logger.error("页面下载失败：{}",url);
 		}
 		return content;
 	}
