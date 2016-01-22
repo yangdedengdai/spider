@@ -69,7 +69,9 @@ public class JDProcessableImpl implements Processable{
 			page.setGoodsId("jd_"+goodsId);
 			
 			String priceJsonResponse = PageUtils.getContent("http://p.3.cn/prices/get?skuid=J_"+goodsId);
+			System.out.println("====="+priceJsonResponse);
 			JSONArray objArray  = new JSONArray(priceJsonResponse);
+			
 			JSONObject obj = (JSONObject) objArray.get(0);
 			page.addField("price", obj.getString("p").toString());
 			//解析规格参数,解析所有的tr
